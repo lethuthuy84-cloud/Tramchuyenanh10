@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Practice Test 1 — Interactive Test</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#325FA3; --blue-deep:#24447a; --orange:#DB7F3E;
+    --bg:#F3F6FB; --ink:#1B2740; --muted:#6b7688;
+    --ok:#3fa66a; --bad:#d9534f;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Nunito',sans-serif;}
+  .wrap{max-width:820px;margin:0 auto;padding:28px 20px 90px;}
+  h1{font-family:'Fredoka';font-weight:600;color:var(--blue-deep);font-size:24px;margin:0 0 4px;}
+  .meta{color:var(--muted);font-size:13.5px;margin:0 0 24px;}
+  .topbar{position:sticky;top:0;background:var(--bg);padding:10px 0;border-bottom:1px solid #dde5f2;z-index:5;display:flex;align-items:center;gap:16px;margin-bottom:18px;}
+  .progress-outer{flex:1;height:8px;background:#dde5f2;border-radius:6px;overflow:hidden;}
+  .progress-inner{height:100%;background:var(--orange);width:0%;transition:width .2s;}
+  .timer{font-family:'Fredoka';font-weight:600;color:var(--blue-deep);font-size:14px;white-space:nowrap;}
+  section.block{background:#fff;border:1px solid #e3e9f4;border-radius:14px;padding:20px 22px;margin-bottom:20px;}
+  section.block h2{font-family:'Fredoka';font-size:16px;color:var(--blue-deep);margin:0 0 4px;}
+  section.block h3{font-family:'Fredoka';font-size:14px;color:var(--blue);margin:18px 0 10px;}
+  .instr{font-size:13px;color:var(--muted);margin:0 0 14px;font-style:italic;}
+  .q{margin-bottom:14px;padding-bottom:12px;border-bottom:1px dashed #e6ecf6;}
+  .q:last-child{border-bottom:none;}
+  .q-num{font-weight:700;color:var(--blue-deep);margin-right:4px;}
+  .opts{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:6px;}
+  .opt{display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;}
+  .opt input{accent-color:var(--blue);}
+  .passage{font-size:14.5px;line-height:1.8;color:var(--ink);}
+  .passage b{color:var(--blue-deep);}
+  input.blank{border:none;border-bottom:2px solid var(--blue);background:#eef3fb;font-family:'Nunito';font-size:14px;padding:2px 6px;width:110px;text-align:center;border-radius:4px 4px 0 0;}
+  input.blank:focus{outline:none;border-bottom-color:var(--orange);}
+  select.blank-select{border:2px solid #cdd9ee;border-radius:6px;padding:3px 6px;font-family:'Nunito';font-size:13.5px;}
+  .errtable{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:10px;}
+  .errtable th,.errtable td{border:1px solid #e3e9f4;padding:6px 8px;text-align:center;}
+  .errtable th{background:var(--bg);font-family:'Fredoka';font-size:12.5px;color:var(--blue-deep);}
+  .errtable input.blank{width:100px;}
+  .line-ref{font-size:13px;color:var(--muted);margin:0 0 4px;}
+  .write-q{margin-bottom:16px;}
+  .write-q .given{font-size:13px;color:var(--muted);margin:2px 0 6px;}
+  textarea.write-ans{width:100%;min-height:44px;border:2px solid #cdd9ee;border-radius:8px;padding:8px 10px;font-family:'Nunito';font-size:14px;resize:vertical;}
+  .model-answer{display:none;margin-top:8px;background:#f2fbf5;border:1px solid #bfe6cd;border-radius:8px;padding:10px 12px;font-size:13.5px;color:#1c6b3c;}
+  .model-answer.show{display:block;}
+  .btn{font-family:'Fredoka';font-weight:600;border:none;border-radius:10px;padding:11px 22px;cursor:pointer;font-size:14px;}
+  .btn-orange{background:var(--orange);color:#fff;}
+  .btn-blue{background:var(--blue);color:#fff;}
+  .btn-ghost{background:none;border:1px solid #cdd9ee;color:var(--blue-deep);}
+  .btn:hover{opacity:.92;}
+  .grade-ok{background:#f2fbf5 !important;border-color:var(--ok) !important;}
+  .grade-bad{background:#fdf3f2 !important;border-color:var(--bad) !important;}
+  select.grade-ok, input.grade-ok{border-color:var(--ok) !important;}
+  select.grade-bad, input.grade-bad{border-color:var(--bad) !important;}
+  #start-screen{max-width:420px;margin:60px auto;background:#fff;border-radius:16px;padding:32px;border:1px solid #e3e9f4;text-align:center;}
+  #start-screen input{width:100%;padding:11px 14px;border:2px solid #cdd9ee;border-radius:10px;font-size:15px;margin:14px 0;font-family:'Nunito';}
+  #result-screen{display:none;max-width:520px;margin:60px auto;background:#fff;border-radius:16px;padding:32px;border:1px solid #e3e9f4;text-align:center;}
+  #result-screen .score{font-family:'Fredoka';font-weight:700;font-size:44px;color:var(--orange);margin:10px 0;}
+  #result-screen .sub{color:var(--muted);font-size:14px;margin-bottom:20px;}
+  #copy-box{background:var(--bg);border-radius:10px;padding:14px;font-size:13px;text-align:left;white-space:pre-wrap;margin-bottom:16px;}
+  #test-body{display:none;}
+</style>
+</head>
+<body>
+
+<div id="start-screen">
+  <div style="font-family:'Fredoka';font-weight:600;color:var(--blue-deep);font-size:13px;letter-spacing:.03em;">TRẠM CHUYÊN ANH · ĐỀ LUYỆN TẬP</div>
+  <h1 style="margin-top:6px;">Practice Test 1</h1>
+  <p class="meta">90 câu · 4 phần: Phonetics, Lexico-Grammar, Reading, Writing</p>
+  <input type="text" id="student-name" placeholder="Nhập họ và tên của em">
+  <button class="btn btn-orange" style="width:100%;" onclick="startTest()">Bắt đầu làm bài</button>
+</div>
+
+<div id="test-body">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="progress-outer"><div class="progress-inner" id="progress-bar"></div></div>
+      <div class="timer" id="timer">00:00</div>
+    </div>
+    <h1>Practice Test 1</h1>
+    <p class="meta" id="student-label"></p>
+
+    <!-- ===== A. PHONETICS ===== -->
+    <section class="block">
+      <h2>A. PHONETICS</h2>
+      <h3>I. Choose the word which has the underlined part pronounced differently from the rest.</h3>
+      <div id="phon1"></div>
+      <h3>II. Choose the word whose main stress is placed differently from the others in each group.</h3>
+      <div id="phon2"></div>
+    </section>
+
+    <!-- ===== B. LEXICO-GRAMMAR ===== -->
+    <section class="block">
+      <h2>B. LEXICO-GRAMMAR</h2>
+      <h3>I. Choose the best option (A, B, C or D) to complete the sentences.</h3>
+      <div id="lexico1"></div>
+
+      <h3>II. Fill in each blank with ONE preposition or article.</h3>
+      <div id="prepos"></div>
+
+      <h3>III. Fill in the blanks with the correct form of the words.</h3>
+      <p class="passage">
+        In Totteridge, in north London, there is a yew tree estimated to be between 1,000 and 2,000 years old.
+        This tree, however, is a mere youngster in comparison with others of the species. The record in the UK
+        is held by a yew in Scotland that is thought to be between 4,000 and 5,000 years old.<br><br>
+        However, such trees are becoming (36. INCREASE) <input type="text" class="blank" data-q="36"> rare and the
+        Totteridge specimen was considered of (37. SUFFICE) <input type="text" class="blank" data-q="37"> importance
+        to be named in 1999 as one of the 41 'great trees' in London. Like many yews, the Totteridge tree
+        (38. DOUBT) <input type="text" class="blank" data-q="38"> predates the buildings around and its exact age
+        is unknown.<br><br>
+        The Totteridge tree needs little (39. MAINTAIN) <input type="text" class="blank" data-q="39">. Some of its
+        outer branches hang down so low that they have taken root. But this is part of the tree's natural
+        architecture and contributes to its (40. STABLE) <input type="text" class="blank" data-q="40"> in high
+        winds. With the best of (41. INTEND) <input type="text" class="blank" data-q="41">, ancient yew sites are
+        often tidied up with no benefit to the tree. Dead branches are not (42. READY)
+        <input type="text" class="blank" data-q="42"> shed by the tree and their wood harbours a multitude of
+        insects, an inseparable part of the old tree's natural (43. DIVERSE) <input type="text" class="blank" data-q="43">.
+        Something of the tree's history is lost with the (44. REMOVE) <input type="text" class="blank" data-q="44">
+        of dead wood. After all, the decaying, twisted and (45. ATTRACT) <input type="text" class="blank" data-q="45">
+        parts give the tree character.
+      </p>
+
+      <h3>IV. Read the text (10 mistakes). Identify the mistake and write the correction for each numbered line.</h3>
+      <p class="passage" style="background:var(--bg);padding:12px 14px;border-radius:10px;font-size:13.5px;">
+        <b>RAIN MAKING</b><br>
+        <b>0</b> When it rains, it doesn't always pour. During a typical storm, a comparative small amount of the locking<br>
+        <b>1</b> up moisture in each cloud reaches the ground like rain. So the idea that human intervention a rain dance,<br>
+        <b>2</b> perhaps - might encourage the sky to give up a little additional water has been around in prehistoric<br>
+        <b>3</b> times. More recently, would-be rain-makers have attempted direct intervention, by lobbing various<br>
+        <b>4</b> chemicals out of airplanes in the effort to wring more rain from the clouds, a practice knowing as 'cloud<br>
+        <b>5</b> seeding'.<br>
+        <b>6</b> Yet such techniques, which were first developed in the 1940s, are notoriously difficult to evaluate. It is<br>
+        <b>7</b> hard to ascertain, for example, how much rain would have fallen anyway. So, though much anecdotal<br>
+        <b>8</b> evidence of the advantages of cloud seeding, that has led to its adoption in more than 40 countries<br>
+        <b>9</b> around the world, as far as scientists are concerned, results are still inconclusive. That could be about<br>
+        <b>10</b> to changing. For the past three years researchers have been carrying out the most extensive and<br>
+        <b>11</b> rigorous evaluation to date of a revolutionarily new technique which will substantially boost the volume<br>
+        <b>12</b> of rainfall.<br>
+        <b>13</b> The preliminary finding of their experiments indicate that solid evidence of the technique's effectiveness<br>
+        <b>14</b> is now within the scientists' grasp.
+      </p>
+      <table class="errtable">
+        <tr><th>Câu</th><th>Dòng</th><th>Từ sai</th><th>Sửa lại</th></tr>
+        <tr><td>46</td><td>0</td><td><input type="text" class="blank" data-q="46" data-part="mistake"></td><td><input type="text" class="blank" data-q="46" data-part="correction"></td></tr>
+        <tr><td>47</td><td>1</td><td><input type="text" class="blank" data-q="47" data-part="mistake"></td><td><input type="text" class="blank" data-q="47" data-part="correction"></td></tr>
+        <tr><td>48</td><td>2</td><td><input type="text" class="blank" data-q="48" data-part="mistake"></td><td><input type="text" class="blank" data-q="48" data-part="correction"></td></tr>
+        <tr><td>49</td><td>4</td><td><input type="text" class="blank" data-q="49" data-part="mistake"></td><td><input type="text" class="blank" data-q="49" data-part="correction"></td></tr>
+        <tr><td>50</td><td>4</td><td><input type="text" class="blank" data-q="50" data-part="mistake"></td><td><input type="text" class="blank" data-q="50" data-part="correction"></td></tr>
+        <tr><td>51</td><td>7</td><td><input type="text" class="blank" data-q="51" data-part="mistake"></td><td><input type="text" class="blank" data-q="51" data-part="correction"></td></tr>
+        <tr><td>52</td><td>8</td><td><input type="text" class="blank" data-q="52" data-part="mistake"></td><td><input type="text" class="blank" data-q="52" data-part="correction"></td></tr>
+        <tr><td>53</td><td>10</td><td><input type="text" class="blank" data-q="53" data-part="mistake"></td><td><input type="text" class="blank" data-q="53" data-part="correction"></td></tr>
+        <tr><td>54</td><td>11</td><td><input type="text" class="blank" data-q="54" data-part="mistake"></td><td><input type="text" class="blank" data-q="54" data-part="correction"></td></tr>
+        <tr><td>55</td><td>13</td><td><input type="text" class="blank" data-q="55" data-part="mistake"></td><td><input type="text" class="blank" data-q="55" data-part="correction"></td></tr>
+      </table>
+    </section>
+
+    <!-- ===== C. READING ===== -->
+    <section class="block">
+      <h2>C. READING</h2>
+      <h3>I. Fill each gap with ONE suitable word.</h3>
+      <p class="passage">
+        <b>LAUGHING IS GOOD FOR YOU — SERIOUSLY</b><br><br>
+        It is a sad fact that adults laugh far less than children, sometimes by as much (56)
+        <input type="text" class="blank" data-q="56"> a couple of hundred times a day. Just take a look at people's
+        faces on the way to work or in the office: you'll be lucky to see a smile, let alone hear a laugh. This is a
+        shame – especially in view of the (57) <input type="text" class="blank" data-q="57"> that scientists have
+        proved that laughing is good for you. "When you laugh" says psychologist David Cohen, "it produces the
+        feel-good hormones, endorphins. It counters the effects of stress (58) <input type="text" class="blank" data-q="58">
+        enhances the immune system."<br><br>
+        There are many reasons why we might laugh less in adult life: perhaps we are too work-obsessed, or too
+        embarrassed to (59) <input type="text" class="blank" data-q="59"> our emotions show. Some psychologists
+        simply believe that children have more native responses, and as adults we naturally grow (60)
+        <input type="text" class="blank" data-q="60"> of spontaneous reactions. Luckily, (61)
+        <input type="text" class="blank" data-q="61">, it is possible to relearn the art of laughter. In India,
+        "laughter clinics" have been growing (62) <input type="text" class="blank" data-q="62"> popularity over the
+        last few years, (63) <input type="text" class="blank" data-q="63"> to the efforts of Dr Madan Kataria, (64)
+        <input type="text" class="blank" data-q="64"> work has won him (65) <input type="text" class="blank" data-q="65">
+        devoted following.
+      </p>
+
+      <h3>II. Read the text and do the following tasks.</h3>
+      <p class="passage" style="font-style:italic;">TRY IT AND SEE — In the social sciences, it is often supposed that there can be no such thing as a controlled experiment. Think again.</p>
+      <p class="passage"><b>A.</b> In the scientific pecking order, social scientists are usually looked down on by their peers in the natural sciences. Natural scientists do experiments to test their theories or, if they cannot, they try to look for natural phenomena that can act in lieu of experiments. Social scientists, it is widely thought, do not subject their own hypotheses to any such rigorous treatment. Worse, they peddle their untested hypotheses to governments and try to get them turned into policies.</p>
+      <p class="passage"><b>B.</b> Governments require sellers of new medicines to demonstrate their safety and effectiveness. The accepted gold standard of evidence is a randomised control trial, in which a new drug is compared with the best existing therapy (or with a placebo, if no treatment is available). Patients are assigned to one arm or the other of such a study at random, ensuring that the only difference between the two groups is the new treatment. The best studies also ensure that neither patient nor physician knows which patient is allocated to which therapy. Drug trials must also include enough patients to make it unlikely that chance alone may determine the result.</p>
+      <p class="passage"><b>C.</b> But few education programmes or social initiatives are evaluated in carefully conducted studies prior to their introduction. A case in point is the 'whole-language' approach to reading, which swept much of the English-speaking world in the 1970s and 1980s. The whole-language theory holds that children learn to read best by absorbing contextual clues from texts, not by breaking individual words into their component parts and reassembling them (a method known as phonics). Unfortunately, the educational theorists who pushed the whole-language notion so successfully did not wait for evidence from controlled randomised trials before advancing their claims. Had they done so, they might have concluded, as did an analysis of 52 randomised studies carried out by the US National Reading Panel in 2000, that effective reading instruction requires phonics.</p>
+      <p class="passage"><b>D.</b> To avoid the widespread adoption of misguided ideas, the sensible thing is to experiment first and make policy later. This is the idea behind a trial of restorative justice which is taking place in the English courts. The experiment will include criminals who plead guilty to robbery. Those who agree to participate will be assigned randomly either to sentencing as normal or to participation in a conference in which the offender comes face-to-face with his victim and discusses how he may make emotional and material restitution. The purpose of the trial is to assess whether such restorative justice limits re-offending. If it does, it might be adopted more widely.</p>
+      <p class="passage"><b>E.</b> The idea of experimental evidence is not quite as new to the social sciences as sneering natural scientists might believe. In fact, randomised trials and systematic reviews of evidence were introduced into the social sciences long before they became common in medicine. An apparent example of random allocation is a study carried out in 1927 of how to persuade people to vote in elections. And randomised trials in social work were begun in the 1930s and 1940s. But enthusiasm later waned. This loss of interest can be attributed, at least in part, to the fact that early experiments produced little evidence of positive outcomes. Others suggest that much of the opposition to experimental evaluation stems from a common philosophical malaise among social scientists, who doubt the validity of the natural sciences, and therefore reject the potential of knowledge derived from controlled experiments. A more pragmatic factor limiting the growth of evidence-based education and social services may be limitations on the funds available for research.</p>
+      <p class="passage"><b>F.</b> Nevertheless, some 11,000 experimental studies are known in the social sciences (compared with over 250,000 in the medical literature). Randomised trials have been used to evaluate the effectiveness of driver-education programmes, job-training schemes, classroom size, psychological counselling for post-traumatic stress disorder and increased investment in public housing. And where they are carried out, they seem to have a healthy dampening effect on otherwise rosy interpretations of the observations.</p>
+      <p class="passage"><b>G.</b> The problem for policymakers is often not too few data, but what to make of multiple and conflicting studies. This is where a body called the Campbell Collaboration comes into its own. This independent non-profit organisation is designed to evaluate existing studies, in a process known as a systematic review. This means attempting to identify every relevant trial of a given question (including studies that have never been published), choosing the best ones using clearly defined criteria for quality, and combining the results in a statistically valid way. An equivalent body, the Cochrane Collaboration, has produced more than 1,004 such reviews in medical fields. The hope is that rigorous review standards will allow Campbell, like Cochrane, to become a trusted and authoritative source of information.</p>
+
+      <p class="instr" style="margin-top:14px;">For questions 66-71, choose the correct heading for paragraphs B-G (i-x):<br>
+      i. Why some early social science methods lost popularity · ii. The cost implications of research · iii. Looking ahead to an unbiased assessment of research · iv. A range of social issues that have been usefully studied · v. An example of a poor decision that was made too quickly · vi. What happens when the figures are wrong · vii. One area of research that is rigorously carried out · viii. The changing nature of medical trials · ix. An investigative study that may lead to a new system · x. Why some scientists' theories are considered second-rate</p>
+      <div id="headings"></div>
+
+      <h3>For questions 72-75, complete the summary (NO MORE THAN TWO WORDS each).</h3>
+      <p class="passage"><b>Fighting Crime</b><br>
+        Some criminals in England are agreeing to take part in a trial designed to help reduce their chances of 72.
+        <input type="text" class="blank" data-q="72">. The idea is that while one group of randomly selected criminals
+        undergoes the usual 73. <input type="text" class="blank" data-q="73"> the other group will discuss the
+        possibility of making some repayment for the crime by meeting the 74.
+        <input type="text" class="blank" data-q="74">. It is yet to be seen whether this system, known as 75.
+        <input type="text" class="blank" data-q="75"> will work.
+      </p>
+    </section>
+
+    <!-- ===== D. WRITING (self-check, not auto-graded) ===== -->
+    <section class="block">
+      <h2>D. WRITING <span style="font-size:12px;color:var(--muted);font-weight:400;">(tự đối chiếu — không tính vào điểm)</span></h2>
+      <p class="instr">Dùng từ gợi ý để viết lại câu, giữ nguyên nghĩa. Sau khi làm xong, bấm "Xem đáp án mẫu" để tự so sánh — phần này có nhiều cách viết đúng nên không chấm tự động.</p>
+      <div id="writing"></div>
+    </section>
+
+    <div style="text-align:center;margin-top:10px;">
+      <button class="btn btn-orange" onclick="submitTest()">Nộp bài</button>
+    </div>
+  </div>
+</div>
+
+<div id="result-screen">
+  <h1>Kết quả</h1>
+  <div class="score" id="score-display"></div>
+  <div class="sub" id="score-sub"></div>
+  <div id="copy-box"></div>
+  <button class="btn btn-blue" onclick="copyResult()">Sao chép kết quả</button>
+</div>
+
+<script>
+// ================= DATA =================
+const ANSWER_KEY = {
+  1:'A',2:'B',3:'D',4:'D',5:'A',6:'A',7:'A',8:'A',9:'A',10:'A',
+  11:'C',12:'B',13:'B',14:'A',15:'A',16:'A',17:'B',18:'B',19:'C',20:'B',
+  21:'C',22:'A',23:'C',24:'D',25:'B',
+  26:'for',27:'from',28:'against',29:'to',30:'with',31:'from',32:'among',33:'from',34:'with',35:'of',
+  36:'increasingly',37:'sufficient',38:'undoubtedly',39:'maintenance',40:'stability',
+  41:'intentions',42:'readily',43:'diversity',44:'removal',45:'unattractive',
+  46:{mistake:'locking',correction:'locked'},
+  47:{mistake:'like',correction:'as'},
+  48:{mistake:'in',correction:'since'},
+  49:{mistake:'the',correction:'an'},
+  50:{mistake:'knowing',correction:'known'},
+  51:{mistake:'though',correction:'despite'},
+  52:{mistake:'that',correction:'which'},
+  53:{mistake:'changing',correction:'change'},
+  54:{mistake:'revolutionarily',correction:'revolutionary'},
+  55:{mistake:'finding',correction:'findings'},
+  56:'as',57:'fact',58:'and',59:'let',60:'out',61:'however',62:'in',63:'thanks',64:'whose',65:'a',
+  66:'vii',67:'v',68:'ix',69:'i',70:'iv',71:'iii',
+  72:'re-offending',73:'sentencing',74:'victim',75:'restorative justice'
+};
+const TOTAL_GRADED = 75;
+
+const MC_OPTIONS = {
+  1:['<u>ch</u>eap','<u>ch</u>aracter','<u>ch</u>aos','<u>ch</u>arismatic'],
+  2:['tou<u>gh</u>','throu<u>gh</u>','rou<u>gh</u>','enou<u>gh</u>'],
+  3:['m<u>i</u>neral','determ<u>i</u>ne','exam<u>i</u>ner','m<u>i</u>ning'],
+  4:['surf<u>a</u>ce','pal<u>a</u>ce','neckl<u>a</u>ce','decad<u>e</u>nce'],
+  5:['<u>g</u>orgeous','<u>g</u>em','<u>g</u>ene','<u>g</u>enius'],
+  6:['introduce','influence','arrogant','majesty'],
+  7:['lunatic','dynamic','mosquito','climatic'],
+  8:['colleague','humane','canteen','unite'],
+  9:['dismiss','insect','discount','district'],
+  10:['diagonal','admirable','discipline','mechanism'],
+  11:['could','does','may','might'],
+  12:['open','loose','liberty','free'],
+  13:['extent','full','fun','end'],
+  14:['terminally','deeply','terribly','deathly'],
+  15:['prominent','infamous','fading','eminent'],
+  16:['lost it','past it','up to it','over the hill'],
+  17:['aptitude','ability','technique','skill'],
+  18:['a rushing recovery','a speedy recovery','recovering hastily','recovering quickly'],
+  19:['had floated','has got','is coming','reached'],
+  20:['burning','heated','hot','scorching'],
+  21:['rebound','recoil','retract','retreat'],
+  22:['absorb','achieve','capture','interest'],
+  23:["doesn't calculate","isn't mathematics","doesn't make sense","make the wrong addition"],
+  24:['head and hands','head and ears','head and hair','head and shoulders'],
+  25:['had been for',"hadn't been for","wouldn't have been for","hadn't been"]
+};
+
+const WRITING = [
+  {n:76, prompt:'The first sign of the disease is blurred vision.', cue:'The onset ___', model:'The onset of the disease is signaled/marked/shown by blurred vision.'},
+  {n:77, prompt:'I will only be satisfied if the manager apologizes fully.', cue:'Nothing short ___', model:'Nothing short of a full apology from the manager will satisfy me.'},
+  {n:78, prompt:'It rumored that we will have a new manager.', cue:'Rumor has ___', model:'Rumor has it that we will have a new manager.'},
+  {n:79, prompt:'He is a generous person. (NAME)', cue:'', model:'Generosity is his middle name.'},
+  {n:80, prompt:'Several runners have withdrawn from the race because of health problems. (BACKED)', cue:'', model:'Several runners have backed out of the race because of their health problems.'},
+  {n:81, prompt:'I think Robert is too young to look after his brother. (CARE)', cue:"I think Robert isn't ___ of his brother.", model:"I think Robert isn't old enough to take care of his brother."},
+  {n:82, prompt:"Ben certainly wasn't as innocent as he pretended to be. (MEANS)", cue:'Ben was ___ he pretended to be.', model:'Ben was by no means as innocent as he pretended to be.'},
+  {n:83, prompt:'The twins are eager to see their cousins again in the summer. (LOOKING)', cue:'The twins ___ their cousins again in the summer.', model:'The twins are looking forward to seeing their cousins again in the summer.'},
+  {n:84, prompt:'It was necessary to inspect the electrical systems in order to make sure they are safe. (INTERESTS)', cue:'In ___ the electrical systems.', model:'In the interests of safety, it was necessary to inspect the electrical systems.'},
+  {n:85, prompt:'The proceeds from the sale went to charity. (MADE)', cue:'All the ___ charity.', model:'All the money they made from the sale went to charity.'},
+  {n:86, prompt:'Absolute secrecy was crucial to the success of the mission.', cue:'Without ___', model:"Without absolute secrecy, the mission wouldn't have succeeded. / wouldn't have been a success / wouldn't have been successful"},
+  {n:87, prompt:'Immediately after his arrival home a water-heater exploded.', cue:'Hardly ___', model:'Hardly had he arrived home when a water-heater exploded.'},
+  {n:88, prompt:"Rita doesn't realize how serious her husband's operation is going to be.", cue:'Little ___', model:"Little does Rita realise how serious her husband's operation is going to be."},
+  {n:89, prompt:'Tim insisted on being told the complete story.', cue:'Nothing ___', model:'Nothing but the complete story would satisfy Tim.'},
+  {n:90, prompt:'We must do something about the problem even if it costs a lot.', cue:'Costly ___', model:'Costly as/though it may be, we must do something about the problem.'}
+];
+
+// ================= RENDER =================
+function renderMC(containerId, nums){
+  const el = document.getElementById(containerId);
+  el.innerHTML = nums.map(n => {
+    const opts = MC_OPTIONS[n];
+    const letters = ['A','B','C','D'];
+    return `<div class="q">
+      <span class="q-num">${n}.</span>
+      <div class="opts">
+        ${opts.map((o,i)=>`<label class="opt"><input type="radio" name="q${n}" value="${letters[i]}"> ${letters[i]}. ${o}</label>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderPrepositions(){
+  const items = [
+    [26,'Dr Richards is distinguished ____ his selfless service to humanity.'],
+    [27,'On account of his advanced age he was disqualified ____ competing.'],
+    [28,'He was discharged because there was no proof ____ him.'],
+    [29,'The stolen painting was eventually restored ____ their rightful owner.'],
+    [30,'He parted ____ his family and belongings and went on a pilgrimage.'],
+    [31,'I am convinced that he is acting ____ compulsion.'],
+    [32,'This peculiar custom prevails ____ the Hindus.'],
+    [33,'Many Hindi plays are adapted ____ English.'],
+    [34,'The police are entrusted ____ the enforcement of law and order.'],
+    [35,'The younger sons therefore considered themselves to have been robbed ____ their rightful inheritance.']
+  ];
+  document.getElementById('prepos').innerHTML = items.map(([n,text])=>{
+    const parts = text.split('____');
+    return `<div class="q"><span class="q-num">${n}.</span> ${parts[0]}<input type="text" class="blank" data-q="${n}">${parts[1]}</div>`;
+  }).join('');
+}
+
+function renderHeadings(){
+  const paras = ['B','C','D','E','F','G'];
+  const nums = [66,67,68,69,70,71];
+  const opts = ['i','ii','iii','iv','v','vi','vii','viii','ix','x'];
+  document.getElementById('headings').innerHTML = nums.map((n,idx)=>{
+    return `<div class="q"><span class="q-num">${n}.</span> Paragraph ${paras[idx]} —
+      <select class="blank-select" data-q="${n}">
+        <option value="">--</option>
+        ${opts.map(o=>`<option value="${o}">${o}</option>`).join('')}
+      </select>
+    </div>`;
+  }).join('');
+}
+
+function renderWriting(){
+  document.getElementById('writing').innerHTML = WRITING.map(w => `
+    <div class="write-q" id="write-${w.n}">
+      <span class="q-num">${w.n}.</span> ${w.prompt}
+      ${w.cue ? `<div class="given">${w.cue}</div>` : ''}
+      <textarea class="write-ans" placeholder="Viết câu trả lời của em..."></textarea>
+      <div style="margin-top:6px;">
+        <button class="btn btn-ghost" style="padding:6px 14px;font-size:12.5px;" onclick="toggleModel(${w.n})">Xem đáp án mẫu</button>
+      </div>
+      <div class="model-answer" id="model-${w.n}">${w.model}</div>
+    </div>
+  `).join('');
+}
+
+function toggleModel(n){
+  document.getElementById('model-'+n).classList.toggle('show');
+}
+
+renderMC('phon1', [1,2,3,4,5]);
+renderMC('phon2', [6,7,8,9,10]);
+renderMC('lexico1', [11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]);
+renderPrepositions();
+renderHeadings();
+renderWriting();
+
+// ================= TIMER & PROGRESS =================
+let startTime, timerInterval, studentName = '';
+
+function startTest(){
+  const name = document.getElementById('student-name').value.trim();
+  if(!name){ alert('Em nhập tên trước khi bắt đầu nhé.'); return; }
+  studentName = name;
+  document.getElementById('student-label').textContent = 'Học sinh: ' + studentName;
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('test-body').style.display = 'block';
+  startTime = Date.now();
+  timerInterval = setInterval(updateTimer, 1000);
+  document.getElementById('test-body').addEventListener('input', updateProgress);
+  document.getElementById('test-body').addEventListener('change', updateProgress);
+}
+
+function updateTimer(){
+  const sec = Math.floor((Date.now() - startTime)/1000);
+  const m = String(Math.floor(sec/60)).padStart(2,'0');
+  const s = String(sec%60).padStart(2,'0');
+  document.getElementById('timer').textContent = m+':'+s;
+}
+
+function updateProgress(){
+  let filled = 0, total = TOTAL_GRADED;
+  for(let n=1;n<=25;n++){ if(document.querySelector(`input[name="q${n}"]:checked`)) filled++; }
+  document.querySelectorAll('#test-body input.blank[data-q]').forEach(inp=>{
+    const n = parseInt(inp.dataset.q);
+    if(n>=26 && n<=75 && inp.value.trim() !== '') filled += 1/(inp.dataset.part ? 2 : 1);
+  });
+  document.querySelectorAll('#test-body select.blank-select').forEach(sel=>{ if(sel.value) filled++; });
+  const pct = Math.min(100, Math.round(filled/total*100));
+  document.getElementById('progress-bar').style.width = pct+'%';
+}
+
+// ================= GRADING =================
+function norm(s){ return (s||'').trim().toLowerCase().replace(/\s+/g,' '); }
+
+function submitTest(){
+  clearInterval(timerInterval);
+  let correct = 0;
+
+  // MC 1-25
+  for(let n=1;n<=25;n++){
+    const sel = document.querySelector(`input[name="q${n}"]:checked`);
+    const isCorrect = sel && sel.value === ANSWER_KEY[n];
+    if(isCorrect) correct++;
+    document.querySelectorAll(`input[name="q${n}"]`).forEach(r=>{
+      r.closest('.q') && (r.closest('.opts').querySelectorAll('.opt')[0]);
+    });
+    const qDiv = sel ? sel.closest('.q') : document.querySelector(`input[name="q${n}"]`).closest('.q');
+    qDiv.classList.add(isCorrect ? 'grade-ok' : 'grade-bad');
+  }
+
+  // simple blanks 26-45, 56-65, 72-75
+  [26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,56,57,58,59,60,61,62,63,64,65,72,73,74,75].forEach(n=>{
+    const inp = document.querySelector(`input.blank[data-q="${n}"]`);
+    if(!inp) return;
+    const isCorrect = norm(inp.value) === norm(ANSWER_KEY[n]);
+    if(isCorrect) correct++;
+    inp.classList.add(isCorrect ? 'grade-ok' : 'grade-bad');
+  });
+
+  // error identification 46-55 (mistake + correction both needed)
+  for(let n=46;n<=55;n++){
+    const mIn = document.querySelector(`input.blank[data-q="${n}"][data-part="mistake"]`);
+    const cIn = document.querySelector(`input.blank[data-q="${n}"][data-part="correction"]`);
+    const key = ANSWER_KEY[n];
+    const isCorrect = mIn && cIn && norm(mIn.value)===norm(key.mistake) && norm(cIn.value)===norm(key.correction);
+    if(isCorrect) correct++;
+    mIn.classList.add(isCorrect ? 'grade-ok' : 'grade-bad');
+    cIn.classList.add(isCorrect ? 'grade-ok' : 'grade-bad');
+  }
+
+  // heading matching 66-71
+  for(let n=66;n<=71;n++){
+    const sel = document.querySelector(`select.blank-select[data-q="${n}"]`);
+    const isCorrect = sel && sel.value === ANSWER_KEY[n];
+    if(isCorrect) correct++;
+    sel.classList.add(isCorrect ? 'grade-ok' : 'grade-bad');
+  }
+
+  const scoreOn10 = Math.round((correct / TOTAL_GRADED) * 10 * 100) / 100;
+  const elapsed = Math.floor((Date.now() - startTime)/1000);
+  const mm = String(Math.floor(elapsed/60)).padStart(2,'0');
+  const ss = String(elapsed%60).padStart(2,'0');
+  const dateStr = new Date().toLocaleDateString('vi-VN');
+
+  document.getElementById('test-body').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'block';
+  document.getElementById('score-display').textContent = scoreOn10 + '/10';
+  document.getElementById('score-sub').textContent = `${correct}/${TOTAL_GRADED} câu đúng (75 câu tự chấm) · Thời gian: ${mm}:${ss} · Ngày: ${dateStr}`;
+
+  const copyText = `Practice Test 1 — AC9\nHọ tên: ${studentName}\nĐiểm: ${scoreOn10}/10\nSố câu đúng: ${correct}/${TOTAL_GRADED}\nThời gian làm bài: ${mm}:${ss}\nNgày: ${dateStr}\n(Phần Writing 76-90 tự đối chiếu, không tính điểm)`;
+  document.getElementById('copy-box').textContent = copyText;
+  window._copyText = copyText;
+  window.scrollTo(0,0);
+}
+
+function copyResult(){
+  navigator.clipboard.writeText(window._copyText || '').then(()=>{
+    alert('Đã sao chép kết quả — em có thể dán gửi cho cô.');
+  });
+}
+</script>
+</body>
+</html>

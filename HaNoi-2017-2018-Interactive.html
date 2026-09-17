@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Đề thi tuyển sinh lớp 10 Chuyên Anh — Sở GD&ĐT Hà Nội 2017-2018</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#325FA3; --blue-deep:#24447a; --orange:#DB7F3E;
+    --bg:#F3F6FB; --ink:#1B2740; --muted:#6b7688;
+    --ok:#3fa66a; --bad:#d9534f;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Nunito',sans-serif;}
+  .wrap{max-width:820px;margin:0 auto;padding:28px 20px 90px;}
+  h1{font-family:'Fredoka';font-weight:600;color:var(--blue-deep);font-size:22px;margin:0 0 4px;}
+  .meta{color:var(--muted);font-size:13.5px;margin:0 0 24px;}
+  .topbar{position:sticky;top:0;background:var(--bg);padding:10px 0;border-bottom:1px solid #dde5f2;z-index:5;display:flex;align-items:center;gap:16px;margin-bottom:18px;}
+  .progress-outer{flex:1;height:8px;background:#dde5f2;border-radius:6px;overflow:hidden;}
+  .progress-inner{height:100%;background:var(--orange);width:0%;transition:width .2s;}
+  .timer{font-family:'Fredoka';font-weight:600;color:var(--blue-deep);font-size:14px;white-space:nowrap;}
+  section.block{background:#fff;border:1px solid #e3e9f4;border-radius:14px;padding:20px 22px;margin-bottom:20px;}
+  section.block h2{font-family:'Fredoka';font-size:16px;color:var(--blue-deep);margin:0 0 4px;}
+  section.block h3{font-family:'Fredoka';font-size:14px;color:var(--blue);margin:18px 0 10px;}
+  .instr{font-size:13px;color:var(--muted);margin:0 0 14px;font-style:italic;}
+  .q{margin-bottom:14px;padding-bottom:12px;border-bottom:1px dashed #e6ecf6;}
+  .q:last-child{border-bottom:none;}
+  .q-num{font-weight:700;color:var(--blue-deep);margin-right:4px;}
+  .opts{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:6px;}
+  .opt{display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;}
+  .opt input{accent-color:var(--blue);}
+  .passage{font-size:14.5px;line-height:1.8;color:var(--ink);}
+  .passage b{color:var(--blue-deep);}
+  input.blank{border:none;border-bottom:2px solid var(--blue);background:#eef3fb;font-family:'Nunito';font-size:14px;padding:2px 6px;width:120px;text-align:center;border-radius:4px 4px 0 0;}
+  input.blank:focus{outline:none;border-bottom-color:var(--orange);}
+  select.blank-select{border:2px solid #cdd9ee;border-radius:6px;padding:3px 6px;font-family:'Nunito';font-size:13.5px;}
+  .wordbank{background:var(--bg);border-radius:10px;padding:10px 14px;font-size:13.5px;margin-bottom:12px;}
+  .wordbank b{color:var(--blue-deep);}
+  .write-q{margin-bottom:16px;}
+  .write-q .given{font-size:13px;color:var(--muted);margin:2px 0 6px;}
+  textarea.write-ans{width:100%;min-height:44px;border:2px solid #cdd9ee;border-radius:8px;padding:8px 10px;font-family:'Nunito';font-size:14px;resize:vertical;}
+  .model-answer{display:none;margin-top:8px;background:#f2fbf5;border:1px solid #bfe6cd;border-radius:8px;padding:10px 12px;font-size:13.5px;color:#1c6b3c;}
+  .model-answer.show{display:block;}
+  .btn{font-family:'Fredoka';font-weight:600;border:none;border-radius:10px;padding:11px 22px;cursor:pointer;font-size:14px;}
+  .btn-orange{background:var(--orange);color:#fff;}
+  .btn-blue{background:var(--blue);color:#fff;}
+  .btn-ghost{background:none;border:1px solid #cdd9ee;color:var(--blue-deep);}
+  .btn:hover{opacity:.92;}
+  select.grade-ok, input.blank.grade-ok{border-color:var(--ok) !important;background:#f2fbf5 !important;}
+  select.grade-bad, input.blank.grade-bad{border-color:var(--bad) !important;background:#fdf3f2 !important;}
+  .audio-box{background:var(--bg);border:2px dashed #cdd9ee;border-radius:12px;padding:16px;text-align:center;margin-bottom:16px;font-size:13.5px;color:var(--muted);}
+  .audio-box audio{width:100%;margin-top:8px;}
+  #start-screen{max-width:420px;margin:60px auto;background:#fff;border-radius:16px;padding:32px;border:1px solid #e3e9f4;text-align:center;}
+  #start-screen input{width:100%;padding:11px 14px;border:2px solid #cdd9ee;border-radius:10px;font-size:15px;margin:14px 0;font-family:'Nunito';}
+  #result-screen{display:none;max-width:520px;margin:60px auto;background:#fff;border-radius:16px;padding:32px;border:1px solid #e3e9f4;text-align:center;}
+  #result-screen .score{font-family:'Fredoka';font-weight:700;font-size:44px;color:var(--orange);margin:10px 0;}
+  #result-screen .sub{color:var(--muted);font-size:14px;margin-bottom:20px;}
+  #copy-box{background:var(--bg);border-radius:10px;padding:14px;font-size:13px;text-align:left;white-space:pre-wrap;margin-bottom:16px;}
+  #test-body{display:none;}
+  .essay-box{width:100%;min-height:220px;border:2px solid #cdd9ee;border-radius:10px;padding:12px 14px;font-family:'Nunito';font-size:14px;resize:vertical;}
+  .word-count{font-size:12.5px;color:var(--muted);margin-top:4px;}
+</style>
+</head>
+<body>
+
+<div id="start-screen">
+  <div style="font-family:'Fredoka';font-weight:600;color:var(--blue-deep);font-size:13px;letter-spacing:.03em;">TRẠM CHUYÊN ANH · ĐỀ THI CHÍNH THỨC</div>
+  <h1 style="margin-top:6px;">Sở GD&ĐT Hà Nội 2017–2018</h1>
+  <p class="meta">Môn: Tiếng Anh (Chuyên) — 100 câu, thang điểm 10</p>
+  <input type="text" id="student-name" placeholder="Nhập họ và tên của em">
+  <button class="btn btn-orange" style="width:100%;" onclick="startTest()">Bắt đầu làm bài</button>
+</div>
+
+<div id="test-body">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="progress-outer"><div class="progress-inner" id="progress-bar"></div></div>
+      <div class="timer" id="timer">00:00</div>
+    </div>
+    <h1>Đề thi tuyển sinh lớp 10 THPT Chuyên — Tiếng Anh (Chuyên)</h1>
+    <p class="meta" id="student-label"></p>
+
+    <!-- ===== A. LISTENING ===== -->
+    <section class="block">
+      <h2>A. LISTENING <span style="font-size:12px;color:var(--muted);font-weight:400;">(2.0đ — 20 câu)</span></h2>
+      <div class="audio-box">
+        <div style="font-family:'Fredoka';font-weight:600;color:var(--blue-deep);margin-bottom:6px;">🎧 Part 1</div>
+        <audio controls style="width:100%;"><source src="HaNoi-2017-2018-Listening-Part1.mp3" type="audio/mpeg"></audio>
+        <div style="font-family:'Fredoka';font-weight:600;color:var(--blue-deep);margin:14px 0 6px;">🎧 Part 2</div>
+        <audio controls style="width:100%;"><source src="HaNoi-2017-2018-Listening-Part2.mp3" type="audio/mpeg"></audio>
+      </div>
+
+      <h3>Part 1: Write down the missing information.</h3>
+      <p class="passage">
+        Doctors in (1) <input type="text" class="blank" data-q="L1"> Egypt treated their patients with a medicine
+        derived from the bark of the willow. Edward Stone believed that willow tree (2)
+        <input type="text" class="blank" data-q="L2"> was similar to quinine.<br><br>
+        The active ingredient of aspirin was isolated in (3) <input type="text" class="blank" data-q="L3">.
+        Unfortunately, salicylic acid can affect the (4) <input type="text" class="blank" data-q="L4"> quite badly.
+        The first commercially available aspirins were made by Bayer, a (5) <input type="text" class="blank" data-q="L5">
+        company. However, there was little (6) <input type="text" class="blank" data-q="L6"> into the way aspirin
+        works for nearly (7) <input type="text" class="blank" data-q="L7"> years. Some scientists think that people
+        over (8) <input type="text" class="blank" data-q="L8"> should take aspirin to prevent certain diseases.<br><br>
+        It appears that (9) <input type="text" class="blank" data-q="L9"> grown without artificial chemicals also
+        contain the active (10) <input type="text" class="blank" data-q="L10"> of aspirin.
+      </p>
+
+      <h3>Part 2: Fill in the gaps (1-4); decide T / F / NG (5-10).</h3>
+      <p class="passage">
+        When you first arrive in Britain you will be given the name and telephone extension number of the (1)
+        <input type="text" class="blank" data-q="L11"> who will be administering your programme. It will be
+        helpful if you make a note in your diary of this (2) <input type="text" class="blank" data-q="L12"> and
+        also if you make an (3) <input type="text" class="blank" data-q="L13"> in advance by telephone whenever you
+        want to see your programme officer. If your base is to be outside London, you will be given (4)
+        <input type="text" class="blank" data-q="L14"> about reaching your destination.
+      </p>
+      <div class="q"><span class="q-num">5.</span> If you bring money to Britain, you'd better carry large sums of cash on your person.
+        <select class="blank-select" data-q="L15"><option value="">--</option><option value="T">T</option><option value="F">F</option><option value="NG">NG</option></select></div>
+      <div class="q"><span class="q-num">6.</span> Your money will be more secure if you convert it into traveller's cheques.
+        <select class="blank-select" data-q="L16"><option value="">--</option><option value="T">T</option><option value="F">F</option><option value="NG">NG</option></select></div>
+      <div class="q"><span class="q-num">7.</span> It's not safe to deposit your money with hotels or hostels.
+        <select class="blank-select" data-q="L17"><option value="">--</option><option value="T">T</option><option value="F">F</option><option value="NG">NG</option></select></div>
+      <div class="q"><span class="q-num">8.</span> It's wise to put your purchases in your shopping bag.
+        <select class="blank-select" data-q="L18"><option value="">--</option><option value="T">T</option><option value="F">F</option><option value="NG">NG</option></select></div>
+      <div class="q"><span class="q-num">9.</span> You should never put anything into your own pockets or bag until it has been paid for.
+        <select class="blank-select" data-q="L19"><option value="">--</option><option value="T">T</option><option value="F">F</option><option value="NG">NG</option></select></div>
+      <div class="q"><span class="q-num">10.</span> All shops provide a receipt for you.
+        <select class="blank-select" data-q="L20"><option value="">--</option><option value="T">T</option><option value="F">F</option><option value="NG">NG</option></select></div>
+    </section>
+
+    <!-- ===== B. LEXICOLOGY AND GRAMMAR ===== -->
+    <section class="block">
+      <h2>B. LEXICOLOGY AND GRAMMAR <span style="font-size:12px;color:var(--muted);font-weight:400;">(3.0đ — 30 câu)</span></h2>
+
+      <h3>I. Choose the best option A, B, C or D.</h3>
+      <div id="lexico1"></div>
+
+      <h3>II. Join one word on the left with one word on the right to make compound nouns. There is one extra in each box.</h3>
+      <div class="wordbank"><b>Left:</b> income · food · job · parking · fairy &nbsp;&nbsp; <b>Right:</b> tax · stories · work · satisfaction · meter · poisoning</div>
+      <div class="q"><span class="q-num">1.</span> The more money you earn, the more <input type="text" class="blank" data-q="B2_1"> you have to pay to the government.</div>
+      <div class="q"><span class="q-num">2.</span> On my last holiday, I had terrible <input type="text" class="blank" data-q="B2_2"> as a consequence of eating some bad fish.</div>
+      <div class="q"><span class="q-num">3.</span> Many people are more interested in <input type="text" class="blank" data-q="B2_3"> than in earning large amounts of money.</div>
+      <div class="q"><span class="q-num">4.</span> Don't forget to put some money in the <input type="text" class="blank" data-q="B2_4">, or the traffic wardens will give you a ticket.</div>
+      <div class="q"><span class="q-num">5.</span> When I was young, my parents used to tell me <input type="text" class="blank" data-q="B2_5"> about witches and giants and other strange creatures.</div>
+
+      <h3>III. Give the correct form of the word given.</h3>
+      <div class="q"><span class="q-num">1.</span> A male employee received a <input type="text" class="blank" data-q="B3_1"> for wearing jeans to work. <b>(suspend)</b></div>
+      <div class="q"><span class="q-num">2.</span> Don't forget to buy the biggest bottle of kitchen cleaner to <input type="text" class="blank" data-q="B3_2"> your work surfaces. <b>(infect)</b></div>
+      <div class="q"><span class="q-num">3.</span> She was severely <input type="text" class="blank" data-q="B3_3"> by the long illness she had. <b>(weak)</b></div>
+      <div class="q"><span class="q-num">4.</span> She hadn't been famous as a <input type="text" class="blank" data-q="B3_4"> until her 17th novel was published. <b>(novel)</b></div>
+      <div class="q"><span class="q-num">5.</span> Levels of <input type="text" class="blank" data-q="B3_5"> were certainly not below average, yet cutting boards and dishcloths were found to contain bacteria. <b>(clean)</b></div>
+
+      <h3>IV. Think of one word only which can be used appropriately in all three sentences.</h3>
+      <div class="q"><span class="q-num">1.</span> Ever since John broke the window, he's been in the teacher's ___ books. / Rumor has it that he quit the country leaving nothing but ___ debts behind. / Poor Mark! I feel really ___ about his being laid off.
+        <input type="text" class="blank" data-q="B4_1"></div>
+      <div class="q"><span class="q-num">2.</span> It is very difficult to fully ___ certain pieces of jazz music... / Marta never really seems to ___ the things I do for her. / the value of the vase is set to ___ considerably.
+        <input type="text" class="blank" data-q="B4_2"></div>
+      <div class="q"><span class="q-num">3.</span> The Smiths were quick off the ___ to sell when house prices were falling. / what you said really hit the ___. / Poverty and unemployment have left a ___ on this area.
+        <input type="text" class="blank" data-q="B4_3"></div>
+      <div class="q"><span class="q-num">4.</span> Phil managed to ___ the ball into the back of the net. / I'd jump into the car and ___ for Bristol. / Louise has been asked to ___ an investigation.
+        <input type="text" class="blank" data-q="B4_4"></div>
+      <div class="q"><span class="q-num">5.</span> Few companies saw potential in computers designed for the ___ rather than the office. / cats are generally classified as ___ animals. / people have become more engrossed in ___ issues.
+        <input type="text" class="blank" data-q="B4_5"></div>
+
+      <h3>V. Choose one given verb and add a correct preposition/adverb to make phrasal verbs. Each verb once only, 2 extra.</h3>
+      <div class="wordbank"><b>steal · make · bear · explain · keep · answer · hang</b></div>
+      <div class="q"><span class="q-num">1.</span> We expect that the accused <input type="text" class="blank" data-q="B5_1"> his actions in the highest court in the land.</div>
+      <div class="q"><span class="q-num">2.</span> If you can <input type="text" class="blank" data-q="B5_2"> me a little longer, I'll try to explain the reasons.</div>
+      <div class="q"><span class="q-num">3.</span> The naughty boy <input type="text" class="blank" data-q="B5_3"> with the last of the sweets at the party.</div>
+      <div class="q"><span class="q-num">4.</span> I suppose I would spend a lot of time just <input type="text" class="blank" data-q="B5_4"> with friends in town.</div>
+      <div class="q"><span class="q-num">5.</span> It's hard <input type="text" class="blank" data-q="B5_5"> my music collection these days.</div>
+    </section>
+
+    <!-- ===== C. READING ===== -->
+    <section class="block">
+      <h2>C. READING <span style="font-size:12px;color:var(--muted);font-weight:400;">(2.5đ — 25 câu)</span></h2>
+
+      <h3>I. Choose the best option A, B, C or D to complete the passage.</h3>
+      <p class="passage">
+        Less than a third of advertising executives believe their campaigns help to sell products — a survey has
+        revealed. Instead, they are plagued by self-doubt and insecurity and dream of (1) <input type="text" class="blank" data-q="C1"> it all up for
+        another career. In spite of their 'whiz-kid' (2) <input type="text" class="blank" data-q="C2">, the survey of 600 advertising employees from
+        50 agencies found the industry weary from (3) <input type="text" class="blank" data-q="C3">. Forty percent of women said sex (4)
+        <input type="text" class="blank" data-q="C4"> was rife and 73 percent described advertising as a 'terrible career' for working mothers.
+        Although spending on advertising has increased, only 28 percent of employees were prepared to say that they
+        (5) <input type="text" class="blank" data-q="C5"> believed the campaigns were (6) <input type="text" class="blank" data-q="C6">. Dominic Mills, editor of the
+        industry's trade magazine, which (7) <input type="text" class="blank" data-q="C7"> the survey, was shocked. "It is (8)
+        <input type="text" class="blank" data-q="C8"> to think that so many people believe their efforts are falling (9) <input type="text" class="blank" data-q="C9">
+        of the mark but this is (10) <input type="text" class="blank" data-q="C10"> what people privately think."
+      </p>
+
+      <h3>II. Give one suitable word to complete the passage.</h3>
+      <p class="passage">
+        Most people who move to a foreign country or culture may experience a period of time when they feel very
+        homesick. This feeling is often called 'culture shock' and it is important to know how to cope with culture
+        shock if you are to (1) <input type="text" class="blank" data-q="C11"> successfully to your new home's culture. First of all,
+        everyone will go through some form of culture shock, and the extent to which they do is determined by
+        factors such as the difference between (2) <input type="text" class="blank" data-q="C12">, the degree to which someone is anxious to
+        adapt, and the familiarity that person has to the new culture. If you go to a culture that is far different
+        from your own, you're likely to experience culture shock more sharply than those who move to a new culture
+        knowing the language and the behavioral (3) <input type="text" class="blank" data-q="C13"> of the new culture.<br><br>
+        There are four general stages of cultural adjustment. The first is usually referred to as the excitement or
+        'honeymoon' stage. But it isn't (5) <input type="text" class="blank" data-q="C15"> before the honeymoon stage dissolves into the
+        second stage — the withdrawal stage — where friends are hard to (6) <input type="text" class="blank" data-q="C16"> and simple things become
+        challenges. At this stage you have little meaningful experience of the (4) <input type="text" class="blank" data-q="C14"> you do.<br><br>
+        If you manage to stick it (7) <input type="text" class="blank" data-q="C17">, you'll experience the third stage — the 'recovery' stage,
+        where you feel more confident. The last stage is the 'home' or 'stability' stage. There is, in a (8)
+        <input type="text" class="blank" data-q="C18">, a fifth stage to this process: if you return home (9)
+        <input type="text" class="blank" data-q="C19"> a long period in a new culture, you may experience 'reverse culture shock'. This is
+        usually pretty mild and rarely (10) <input type="text" class="blank" data-q="C20"> for very long.
+      </p>
+
+      <h3>III. Read the passage and choose which of paragraphs A-F fits gaps 1-5 (one extra paragraph).</h3>
+      <p class="passage" style="font-size:13.5px;">
+        If you consider yourself particularly environmentally friendly, there is a community which may interest you —
+        BedZED, a large multi-home development with green architecture, thick windows and walls, solar panels, and a
+        private garden in every flat. <b>[Gap 1]</b><br><br>
+        As far as countries in the West are concerned, buildings consume far more energy than transport. The
+        intelligent design at BedZED demonstrates that architecture can be eco-friendly without high costs or
+        advanced technology. <b>[Gap 2]</b><br><br>
+        The BedZED community — some 84 homes — is cost-effective through economies of scale. <b>[Gap 3]</b><br><br>
+        The technology used could be implemented far more widely; it is neither a challenge nor costly to install
+        solar panels, triple-glazed windows, or insulate floors and walls better. In large part, the drive for these
+        changes has come from Europe, where a EU directive now requires house builders to present evidence of
+        energy-efficiency. <b>[Gap 4]</b><br><br>
+        Governments are also becoming more involved in research — at one lab in California, a team experimented with
+        windows that darken on sunny days to reduce heat. <b>[Gap 5]</b><br><br>
+        We still have not reached a situation in which the general public fully accepts such measures, but as energy
+        prices rise, this is sure to change.
+      </p>
+      <p class="passage" style="font-size:13px;color:var(--muted);">
+        <b>A.</b> Governments elsewhere are playing their part too — the US Energy Star programme...<br>
+        <b>B.</b> Both regions attempt to meet energy consumption guidelines as governments come to grips with global warming...<br>
+        <b>C.</b> In India, a non-profit helps villages convert waste to power; in Sweden, heat from the ground provides hot water...<br>
+        <b>D.</b> Although it might seem like a paradise for the super-rich, it's an estate of affordable housing built 2000-2002 in a London suburb...<br>
+        <b>E.</b> This means finding efficiency in the least complicated way — BedZED has a power plant using waste materials for remaining energy demands...<br>
+        <b>F.</b> Recently, this has been coming from Asia — Indian and Chinese visitors; more zero-energy communities are under construction in the UK and USA...
+      </p>
+      <div class="q"><span class="q-num">Gap 1.</span> <select class="blank-select" data-q="C21"><option value="">--</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select></div>
+      <div class="q"><span class="q-num">Gap 2.</span> <select class="blank-select" data-q="C22"><option value="">--</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select></div>
+      <div class="q"><span class="q-num">Gap 3.</span> <select class="blank-select" data-q="C23"><option value="">--</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select></div>
+      <div class="q"><span class="q-num">Gap 4.</span> <select class="blank-select" data-q="C24"><option value="">--</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select></div>
+      <div class="q"><span class="q-num">Gap 5.</span> <select class="blank-select" data-q="C25"><option value="">--</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select></div>
+    </section>
+
+    <!-- ===== D. WRITING (self-check) ===== -->
+    <section class="block">
+      <h2>D. WRITING <span style="font-size:12px;color:var(--muted);font-weight:400;">(2.5đ — tự đối chiếu, không tính vào điểm tự động)</span></h2>
+
+      <h3>I. Complete each sentence so it means the same as the one printed before it.</h3>
+      <div id="write1"></div>
+
+      <h3>II. Rewrite using the word given (do not alter the given word).</h3>
+      <div id="write2"></div>
+
+      <h3>III. Write an essay (≥250 words)</h3>
+      <p class="instr">Some people say that poor students or students who come from rural areas often find it difficult to have access to university education. What should be done to solve this problem? Give reasons for your answer.</p>
+      <textarea class="essay-box" id="essay-text" oninput="updateWordCount()" placeholder="Viết bài luận của em ở đây..."></textarea>
+      <div class="word-count" id="word-count">0 từ</div>
+    </section>
+
+    <div style="text-align:center;margin-top:10px;">
+      <button class="btn btn-orange" onclick="submitTest()">Nộp bài</button>
+    </div>
+  </div>
+</div>
+
+<div id="result-screen">
+  <h1>Kết quả</h1>
+  <div class="score" id="score-display"></div>
+  <div class="sub" id="score-sub"></div>
+  <div id="copy-box"></div>
+  <button class="btn btn-blue" onclick="copyResult()">Sao chép kết quả</button>
+</div>
+
+<script>
+// ================= ANSWER KEY =================
+const ANSWER_KEY = {
+  L1:'ancient',L2:'extract',L3:'1829',L4:'stomach',L5:'German',L6:'research',L7:'seventy|70',L8:'fifty|50',L9:'vegetables',L10:'ingredients',
+  L11:'officer',L12:'information',L13:'appointment',L14:'instruction',
+  L15:'F',L16:'T',L17:'NG',L18:'F',L19:'T',L20:'F',
+
+  B1_1:'A',B1_2:'B',B1_3:'B',B1_4:'A',B1_5:'A',B1_6:'B',B1_7:'A',B1_8:'D',B1_9:'B',B1_10:'B',
+  B2_1:'income tax',B2_2:'food poisoning',B2_3:'job satisfaction',B2_4:'parking meter',B2_5:'fairy stories',
+  B3_1:'suspension',B3_2:'disinfect',B3_3:'weakened',B3_4:'novelist',B3_5:'cleanliness',
+  B4_1:'bad',B4_2:'appreciate',B4_3:'mark',B4_4:'head',B4_5:'domestic',
+  B5_1:'will answer for',B5_2:'bear with',B5_3:'made off',B5_4:'hanging out',B5_5:'to keep up',
+
+  C1:'giving',C2:'image',C3:'overwork',C4:'discrimination',C5:'genuinely',C6:'effective',C7:'conducted',C8:'staggering',C9:'short',C10:'clearly',
+  C11:'adapt|adjust',C12:'cultures',C13:'norms|patterns',C14:'way',C15:'long',C16:'make',C17:'out',C18:'sense|view',C19:'after',C20:'lasts|remains|stays',
+  C21:'D',C22:'E',C23:'B',C24:'A',C25:'C'
+};
+const TOTAL_GRADED = 75; // 20 listening + 30 lexico + 25 reading
+
+const MC_OPTIONS = {
+  B1_1:['to','on','at','with'],
+  B1_2:['catch up','catch on','take on','identify with'],
+  B1_3:['dangerous','adventurous','foolhardy','instinctive'],
+  B1_4:['should have done','can have done','may have done','have done'],
+  B1_5:['bargain','affair','contract','business'],
+  B1_6:['trained','cultivated','implanted','reared'],
+  B1_7:['cautious','notorious','harmonious','hilarious'],
+  B1_8:['constant','disorderly','continuing','hesitant'],
+  B1_9:['examined','gave evidence','disapproved','denied'],
+  B1_10:['charitable','rebellious','preposterous','questionable']
+};
+
+const WRITING1 = [
+  {n:'D1_1', prompt:"I suppose you didn't enjoy that party so long, did you?", cue:"You can't ___?", model:"You can't have enjoyed that party so long, can you?"},
+  {n:'D1_2', prompt:'It was her lack of confidence that surprised me.', cue:'What I found ___.', model:'What I found surprising was her lack of confidence.'},
+  {n:'D1_3', prompt:"The only reason why she got promotion is that she's competent.", cue:'Were it ___.', model:"Were it not for her competence, she wouldn't have got promotion/promoted."},
+  {n:'D1_4', prompt:'That rumor about the politician and the construction contract is absolutely false.', cue:'There is ___.', model:'There is absolutely no truth/not any truth in that rumor about the politician and the construction contract.'},
+  {n:'D1_5', prompt:'The passenger said to the taxi driver: "Hurry up!" and he added "I must be at the station on time."', cue:'The passenger told ___.', model:'The passenger told the taxi driver to hurry up because/since/as he had to be at the station on time.'}
+];
+const WRITING2 = [
+  {n:'D2_1', prompt:'Attendance at the additional evening lectures is not obligatory for students. (under)', model:'Students are under no obligation (whatsoever) to attend the additional evening lectures.'},
+  {n:'D2_2', prompt:'All are eligible for the contest. There is no discrimination of race and sex. (regardless)', model:'All are eligible for (taking/to take part in) the contest regardless of race and sex.'},
+  {n:'D2_3', prompt:"They couldn't deceive customers although they used attractive advertisement. (Whatever)", model:"Whatever attractive advertisement they used, they couldn't deceive customers."},
+  {n:'D2_4', prompt:"I don't care if she doesn't write to me. (difference)", model:'It makes no difference to me if/whether she writes to me/stays/keeps in touch (or not).'},
+  {n:'D2_5', prompt:"I don't know how he is going to accept the fact that he has lost his job. (terms)", model:"I don't know how/in what way he is going to come to terms with losing his job."}
+];
+
+// ================= RENDER =================
+function renderMC(containerId, nums){
+  const el = document.getElementById(containerId);
+  el.innerHTML = nums.map(n => {
+    const opts = MC_OPTIONS[n];
+    const letters = ['A','B','C','D'];
+    const label = n.replace('B1_','');
+    return `<div class="q">
+      <span class="q-num">${label}.</span>
+      <div class="opts">
+        ${opts.map((o,i)=>`<label class="opt"><input type="radio" name="q${n}" value="${letters[i]}"> ${letters[i]}. ${o}</label>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+renderMC('lexico1', ['B1_1','B1_2','B1_3','B1_4','B1_5','B1_6','B1_7','B1_8','B1_9','B1_10']);
+
+function renderWriting(containerId, arr){
+  document.getElementById(containerId).innerHTML = arr.map(w => `
+    <div class="write-q" id="write-${w.n}">
+      <span class="q-num">${w.n.split('_')[1]}.</span> ${w.prompt}
+      ${w.cue ? `<div class="given">${w.cue}</div>` : ''}
+      <textarea class="write-ans" placeholder="Viết câu trả lời của em..."></textarea>
+      <div style="margin-top:6px;">
+        <button class="btn btn-ghost" style="padding:6px 14px;font-size:12.5px;" onclick="toggleModel('${w.n}')">Xem đáp án mẫu</button>
+      </div>
+      <div class="model-answer" id="model-${w.n}">${w.model}</div>
+    </div>
+  `).join('');
+}
+renderWriting('write1', WRITING1);
+renderWriting('write2', WRITING2);
+
+function toggleModel(n){ document.getElementById('model-'+n).classList.toggle('show'); }
+
+function updateWordCount(){
+  const text = document.getElementById('essay-text').value.trim();
+  const words = text ? text.split(/\s+/).length : 0;
+  document.getElementById('word-count').textContent = words + ' từ' + (words < 250 ? ' (yêu cầu tối thiểu 250 từ)' : ' ✓');
+}
+
+// ================= TIMER & PROGRESS =================
+let startTime, timerInterval, studentName = '';
+
+function startTest(){
+  const name = document.getElementById('student-name').value.trim();
+  if(!name){ alert('Em nhập tên trước khi bắt đầu nhé.'); return; }
+  studentName = name;
+  document.getElementById('student-label').textContent = 'Học sinh: ' + studentName;
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('test-body').style.display = 'block';
+  startTime = Date.now();
+  timerInterval = setInterval(updateTimer, 1000);
+  document.getElementById('test-body').addEventListener('input', updateProgress);
+  document.getElementById('test-body').addEventListener('change', updateProgress);
+}
+
+function updateTimer(){
+  const sec = Math.floor((Date.now() - startTime)/1000);
+  const m = String(Math.floor(sec/60)).padStart(2,'0');
+  const s = String(sec%60).padStart(2,'0');
+  document.getElementById('timer').textContent = m+':'+s;
+}
+
+function updateProgress(){
+  let filled = 0;
+  document.querySelectorAll('#test-body input[type=radio]:checked').forEach(()=>filled++);
+  document.querySelectorAll('#test-body input.blank[data-q]').forEach(inp=>{ if(inp.value.trim()!=='') filled++; });
+  document.querySelectorAll('#test-body select.blank-select').forEach(sel=>{ if(sel.value) filled++; });
+  const pct = Math.min(100, Math.round(filled/TOTAL_GRADED*100));
+  document.getElementById('progress-bar').style.width = pct+'%';
+}
+
+// ================= GRADING =================
+function norm(s){ return (s||'').trim().toLowerCase().replace(/\s+/g,' '); }
+function matchAnswer(val, key){
+  return key.split('|').some(alt => norm(val) === norm(alt));
+}
+
+function submitTest(){
+  clearInterval(timerInterval);
+  let correct = 0;
+
+  Object.keys(MC_OPTIONS).forEach(n=>{
+    const sel = document.querySelector(`input[name="q${n}"]:checked`);
+    const isCorrect = sel && sel.value === ANSWER_KEY[n];
+    if(isCorrect) correct++;
+    const group = document.querySelector(`input[name="q${n}"]`).closest('.q');
+    group.style.background = isCorrect ? '#f2fbf5' : '#fdf3f2';
+    group.style.borderRadius = '8px';
+  });
+
+  document.querySelectorAll('#test-body input.blank[data-q]').forEach(inp=>{
+    const n = inp.dataset.q;
+    if(!(n in ANSWER_KEY)) return;
+    const isCorrect = matchAnswer(inp.value, ANSWER_KEY[n]);
+    if(isCorrect) correct++;
+    inp.classList.add(isCorrect ? 'grade-ok' : 'grade-bad');
+  });
+
+  document.querySelectorAll('#test-body select.blank-select[data-q]').forEach(sel=>{
+    const n = sel.dataset.q;
+    if(!(n in ANSWER_KEY)) return;
+    const isCorrect = sel.value === ANSWER_KEY[n];
+    if(isCorrect) correct++;
+    sel.classList.add(isCorrect ? 'grade-ok' : 'grade-bad');
+  });
+
+  const scoreOn10 = Math.round((correct / TOTAL_GRADED) * 10 * 100) / 100;
+  const elapsed = Math.floor((Date.now() - startTime)/1000);
+  const mm = String(Math.floor(elapsed/60)).padStart(2,'0');
+  const ss = String(elapsed%60).padStart(2,'0');
+  const dateStr = new Date().toLocaleDateString('vi-VN');
+
+  document.getElementById('test-body').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'block';
+  document.getElementById('score-display').textContent = scoreOn10 + '/10';
+  document.getElementById('score-sub').textContent = `${correct}/${TOTAL_GRADED} câu đúng (Listening+Lexico+Reading) · Thời gian: ${mm}:${ss} · Ngày: ${dateStr}`;
+
+  const copyText = `Đề thi chính thức Hà Nội 2017-2018\nHọ tên: ${studentName}\nĐiểm: ${scoreOn10}/10\nSố câu đúng: ${correct}/${TOTAL_GRADED}\nThời gian làm bài: ${mm}:${ss}\nNgày: ${dateStr}\n(Phần Writing tự đối chiếu, không tính điểm)`;
+  document.getElementById('copy-box').textContent = copyText;
+  window._copyText = copyText;
+  window.scrollTo(0,0);
+}
+
+function copyResult(){
+  navigator.clipboard.writeText(window._copyText || '').then(()=>{
+    alert('Đã sao chép kết quả — em có thể dán gửi cho cô.');
+  });
+}
+</script>
+</body>
+</html>
